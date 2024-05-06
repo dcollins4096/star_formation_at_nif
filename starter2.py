@@ -18,14 +18,7 @@ from scipy.ndimage import gaussian_filter
 plot_dir = os.environ['HOME']+"/plots"
 #plot_dir = "./plots_to_sort"
 
-
-
 #project specific imports
 import tools.equal_probability_binner as epb
 import tools.power_spectrum as ps
 import tools.horizontal_distance as horz
-#import tools.brunt_tools as bt
-#import tools.shot as shot
-
-#import regions.subregions as subregions
-
