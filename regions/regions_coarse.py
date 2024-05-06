@@ -3,6 +3,7 @@
 #
 
 from starter2 import *
+import regions.tiff_poker as TP
 
 
 
@@ -77,7 +78,7 @@ def save_trim(trim,fname):
     fptr.close()
     print('saved file',fname)
 
-def read_trim(fname):
+def read(fname):
     fptr=h5py.File(fname,'r')
     trim={}
     for section in fptr:

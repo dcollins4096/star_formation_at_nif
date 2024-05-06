@@ -23,3 +23,5 @@ def align_regions(trimmed, align_fname):
     fptr['r0_t1'] = TA_0_1
     fptr['r0_t2'] = TA_0_2
     fptr.close()
+
+

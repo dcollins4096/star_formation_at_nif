@@ -1,5 +1,7 @@
 
-from starter2 import *
+from dtools.starter1 import *
+from tifffile import imread
+import tools.equal_probability_binner as epb
 
 #base_dir="/Users/dcollins/Dropbox/RESEARCH5/Paper68/Data_analysis/Raw_radiographs/play"
 #base_dir="/Users/davidcollins/Dropbox/RESEARCH5/Paper68/Data_analysis/Raw_radiographs/play"
@@ -104,7 +106,7 @@ class viewer():
             vmax = TheZ.max()
         n_plots = 2
         if zero: n_plots=3
-        fig,axes=plt.subplots(1,n_plots,figsize=(12,12))
+        fig,axes=plt.subplots(1,n_plots,figsize=(12,8))
         #for ax in axes.flatten():
         #    ax.set_aspect('equal')
         #ax0=axes
@@ -113,12 +115,11 @@ class viewer():
         cmap='viridis'
         if zero:
             maxmax=max([np.abs(vmin),np.abs(vmax)])
-            vmax = maxmax
+            vmax = 0 #maxmax
             vmin = -maxmax
             cmap = 'seismic'
 
-        #norm=mpl.colors.Normalize(vmin=vmin,vmax=vmax)
-        norm=mpl.colors.Normalize(vmin=vmin,vmax=0)
+        norm=mpl.colors.Normalize(vmin=vmin,vmax=vmax)
         ax0.pcolormesh(self.X1,self.Y1,self.all_data,norm=norm)
         p=ax1.pcolormesh(TheX,TheY,TheZ,norm=norm, cmap=cmap)
         fig.colorbar(p,ax=ax1)
