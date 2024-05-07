@@ -1,11 +1,13 @@
 from starter2 import *
 import tools.shot as shot
 reload(shot)
+import tools.tabletool as tabletool
+reload(tabletool)
 
 names = ['r60','r120', 'r0']
 #names=['r60']
 
-if 'devices' not in dir() :
+if 'devices' not in dir():
     devices={}
 
 #The following y-lines are used
@@ -32,24 +34,29 @@ smooth=3
 for name in names:
     if name not in devices:
         tmp=shot.device(name, lines=y_cut[name], lightmodel=lightmodel,smooth=smooth)
-        tmp.image_density(fname = 'image_shot_%s'%name)
+        #tmp.image_density1(fname = 'image_shot_%s'%name)
         x_off=None
         if name == 'r0':
             shift_60 = devices['r60'].shift_x
             shift_120 = devices['r120'].shift_x
             x_off = 0.5*(shift_60+shift_120)
-        tmp.bumper(bump_range[name],fix_shift_x=x_off,fname='bumper_%s.pdf'%name)
-        tmp.compute_velocity( vel_cut[name],fname = 'velocity_%s'%name)
-        tmp.sigma_rho(post_shock_region[name], fname = 'sigma_rho_%s'%name)
-        tmp.csound(mean_density=shock_points[name], fname='csound_%s'%name)
-        tmp.atwood()
-        tmp.sigma_v( )
+        #Supply a file name to trigger a plot.
+        tmp.bumper(bump_range[name],fix_shift_x=x_off)#  ,fname='bumper_%s.pdf'%name)
+        tmp.get_velocity( vel_cut[name]          )#  ,fname = 'velocity_%s.pdf'%name)
+        tmp.get_csound(mean_density=shock_points[name]   )#  , fname='csound_%s.pdf'%name)
+        tmp.get_sigma_rho(post_shock_region[name]        )#  , fname = 'sigma_rho_%s.pdf'%name)
+        tmp.get_atwood()
+        tmp.get_sigma_v( )
+        print("Atwood %0.2f sigma_v %0.2f Ms %0.2f"%(tmp.atwood_number, tmp.sigma_v, tmp.sigma_v/tmp.cs))
+        print("mean rho %0.2f sigma_b %0.2f"%(tmp.mean_rho, tmp.sigma_B))
         devices[name]=tmp
 
+tabletool.table(devices, fname='table2.tex')
 if 1:
     fig,ax=plt.subplots(1,1)
     for name in devices:
         dev = devices[name]
         ax.scatter( dev.sigma_v/dev.cs, dev.sigma_B, label=name)
     ax.legend(loc=0)
+    ax.set(xlabel=r'$\sigma_v/c_s$', ylabel=r'$\sigma_B$')
     fig.savefig('%s/sigma_v_sigma_rho.pdf'%plot_dir)

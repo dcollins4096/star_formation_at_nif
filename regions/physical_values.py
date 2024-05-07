@@ -61,5 +61,5 @@ def image_to_density(shot, model=0):
         zero_value = image_sort[0]-delta
         #zero_value = 2*subregions.get_zero(shot)
     Q = compute_rho(image, I0, zero=zero_value)
-    return image, Q
+    return image, Q, I0, zero_value
 
