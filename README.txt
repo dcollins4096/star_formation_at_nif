@@ -1,3 +1,15 @@
+Prereqs:
+--------
+#Please install the following packages: pip works great.
+#
+matplotlib
+numpy
+scipy
+astropy
+h5py
+unyt
+tifffile
+
 
 Directories/modules:
 -------------------
