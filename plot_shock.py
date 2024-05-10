@@ -4,10 +4,8 @@ reload(shot)
 import tools.tabletool as tabletool
 reload(tabletool)
 
-#names = ['r60','r120', 'r0']
-#names = ['r60','s120', 's90']
-names=['s90']
-#names=['r60']
+names = ['r60','r120', 'r0', 's90','s120']
+#names=['s90']
 
 if 'devices' not in dir():
     devices={}
@@ -38,7 +36,10 @@ for name in names:
     if name not in devices:
         tmp=shot.device(name, lines=y_cut[name], lightmodel=lightmodel,smooth=smooth)
         tmp.image_density1(fname = 'image_shot_%s'%name)
-        continue
+        
+        if name in ['s90','s120']:
+            print("Analysis on %s incomplete, need fine adjust (bumper)"%name)
+            continue
 
         x_off=None
         if name == 'r0':
