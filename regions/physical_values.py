@@ -37,6 +37,7 @@ def compute_I0(I_pixel):
     return I_0
 def compute_rho(I_pixel, I_0, zero=0):
     fix1 = (I_pixel-zero)/I_0
+    print( np.isnan(fix1).any(), fix1.max())
 
     rho = (-np.log(fix1) -tau_B)*kappa_bar
     return rho
@@ -60,6 +61,12 @@ def image_to_density(shot, model=0):
         delta = image_sort[1]-image_sort[0] 
         zero_value = image_sort[0]-delta
         #zero_value = 2*subregions.get_zero(shot)
+    elif model == 3:
+        #I0=1
+        I0 = compute_I0(ps).max()
+        zero_value=0
     Q = compute_rho(image, I0, zero=zero_value)
+    print("I0 %0.2e Zero %0.2e"%(I0,zero_value))
+           
     return image, Q, I0, zero_value
 

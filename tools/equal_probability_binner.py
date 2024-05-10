@@ -31,12 +31,14 @@ def equal_prob(arr,Nbins,ax=None,cuml=False):
     #error = (pdf*wid).sum()*v.size-v.size
     if ax is not None:
         do_log=False
-        if pdf.max()/pdf.min() > 1e3:
+        if pdf.max()/pdf.min() > 1e1:
             do_log=True
         ax.bar(cen,pdf,width=wid)
         if do_log: ax.set(yscale='log')
-        if cuml==True:
+        if cuml:
             y = np.arange(v.size)/v.size
+            if cuml == -1:
+                y = y[::-1]
             ax2 = ax.twinx()
             ax2.plot(v,y,c='k')
             if do_log: ax2.set(yscale='log')

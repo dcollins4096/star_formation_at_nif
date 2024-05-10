@@ -14,7 +14,7 @@ class powerspectrum():
             k = np.sqrt(kkx**2+kky**2)
         elif rank == 3:
             kkx,kky,kkz=np.meshgrid(kx,kx,kx)
-            k = np.sqrt(kkx**2+kky**2)
+            k = np.sqrt(kkx**2+kky**2+kkz**2)
         power, bins, counts =scipy.stats.binned_statistic(k.flatten(), rhohat.flatten(), bins=kabs,statistic='sum')
         bc = 0.5*(bins[1:]+bins[:-1])
         self.Nhat=Nhat  

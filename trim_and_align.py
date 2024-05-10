@@ -2,6 +2,8 @@
 from starter2 import *
 import regions.regions_coarse as regions_coarse
 import regions.regions_align as regions_align
+reload(regions_align)
+reload(regions_coarse)
 
 
 #Coarse Cut from raw radiograph
@@ -24,6 +26,9 @@ else:
 #    <shot>_align1, the horizontal cuts through the fiducial.  Mostly a development tool
 #    <frame>_trim_align, only the trimmed and aligned image
 aligned_fname = 'data/aligned.h5'
-if not os.path.exists(aligned_fname):
-    regions_align.align_regions(trimmed, aligned_fname)
+if not os.path.exists(aligned_fname) or True:
+    #regions_align.align_regions(trimmed, aligned_fname)
+    #regions_align.align_regions2(trimmed, align_fname=aligned_fname, shot_list=['s120'])
+    regions_align.align_regions2(trimmed, align_fname=aligned_fname, shot_list=['r0','r60','r120','s90','s120'])
+
 

@@ -82,8 +82,10 @@ class device():
             cmap.set_under('w')
             mmax = self.shot1.rho.max()
             mmin = max([0,self.shot1.rho.min()])
-            norm = mpl.colors.Normalize(vmin=mmin,vmax=mmax)
-        ax1.imshow( self.shot1.rho,cmap=cmap,norm=norm)
+            norm = dt.norm_extrema( self.shot1.rho) #mpl.colors.Normalize(vmin=mmin,vmax=mmax)
+            norm = None
+        p=ax1.imshow( self.shot1.rho,cmap=cmap,norm=norm)
+        fig.colorbar(p,ax=ax1)
         ax2.imshow( self.shot2.rho,cmap=cmap,norm=norm)
         ax4.imshow( self.shot1.image)#,cmap=cmap,norm=norm)
         ax5.imshow( self.shot2.image)#,cmap=cmap,norm=norm)

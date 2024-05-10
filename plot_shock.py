@@ -4,14 +4,22 @@ reload(shot)
 import tools.tabletool as tabletool
 reload(tabletool)
 
-names = ['r60','r120', 'r0']
+#names = ['r60','r120', 'r0']
+#names = ['r60','s120', 's90']
+names=['s90']
 #names=['r60']
 
 if 'devices' not in dir():
     devices={}
 
+#lightmodel converts the image into usable density.
+#Details are found in physical_values.py
+lightmodel = {'r0':0,'r60':0,'r120':0,'s120':3,'s90':3}[name]
+#number of pixels for smoothing
+smooth=3
+
 #The following y-lines are used
-y_cut = {'r0':[200,400], 'r60':[200,400], 'r120':[200,400]}
+y_cut = {'r0':[200,400], 'r60':[200,400], 'r120':[200,400], 's90':[450,650], 's120':[200,400]}
 
 #A fine alignment is performed based on the voids in the preshock region.
 #Both position and density are adjusted.  This region, in pixesls, is used to align.
@@ -26,15 +34,12 @@ shock_points = {'r60':[325,375, 650], 'r0':[380,500,700], 'r120':[325,375,650]}
 #The post shock region position
 post_shock_region = {'r0':[550,750], 'r60':[475,675], 'r120':[475,675]}
 
-#lightmodel converts the image into usable density.
-#Details are found in physical_values.py
-lightmodel=0
-#number of pixels for smoothing
-smooth=3
 for name in names:
     if name not in devices:
         tmp=shot.device(name, lines=y_cut[name], lightmodel=lightmodel,smooth=smooth)
-        #tmp.image_density1(fname = 'image_shot_%s'%name)
+        tmp.image_density1(fname = 'image_shot_%s'%name)
+        continue
+
         x_off=None
         if name == 'r0':
             shift_60 = devices['r60'].shift_x
@@ -52,7 +57,7 @@ for name in names:
         devices[name]=tmp
 
 tabletool.table(devices, fname='table2.tex')
-if 1:
+if 0:
     fig,ax=plt.subplots(1,1)
     for name in devices:
         dev = devices[name]
