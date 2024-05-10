@@ -6,6 +6,18 @@ import glob
 import os.path
 import tarfile
 import h5py
+
+def norm_extrema(arr, frac=0.1):
+    v = arr.flatten()
+    v.sort()
+    N = v.size
+    minind = int(frac*N)
+    maxind = int((1-frac)*N)
+    minmin = v[minind]
+    maxmax = v[maxind]
+    norm = mpl.colors.Normalize(vmin=minmin,vmax=maxmax)
+    #return minmin,maxmax
+    return norm
 class extents():
     def __init__(self, array=None):
         self.minmax=[]
