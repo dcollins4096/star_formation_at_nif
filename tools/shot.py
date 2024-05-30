@@ -169,6 +169,16 @@ class device():
             fig.savefig('%s/%s'%(plot_dir,fname))
             plt.close(fig)
 
+    def get_velocity2(self,rng, fname=None, nbins=16):
+
+        ok = slice(rng[0],rng[1])
+        xa = self.x_1[ok]
+        ya = self.rhobar_1[ok]
+        xb = self.x_2[ok]
+        yb = self.rhobar_2[ok]
+        print(self.x_2)
+
+
     def get_velocity(self,rng, fname=None, nbins=16):
 
         ok = slice(rng[0],rng[1])
@@ -183,7 +193,7 @@ class device():
         I2 = horz.ho2(ya=yb,yb=ya) #apologies for this looking backwards)
         dx2 = I2[:,1]-I2[:,0]
         self.vel_dist = phys.pixel_to_velocity(dx2)
-        hist, cen = epb.equal_prob( self.vel_dist, nbins)
+        hist, cen, wid = epb.equal_prob( self.vel_dist.v, nbins)
         max_ind= np.argmax(hist)
         self.vel = cen[ max_ind]
         a = yb; b=ya
@@ -225,7 +235,6 @@ class device():
         bt.sigmas_2donly(ftool)
         self.sigma_B = ftool.sigma_Brunt
 
-        print('fname',fname)
 
         if fname is not None:
             fig,axes=plt.subplots(1,4, figsize=(13,3))
@@ -252,7 +261,7 @@ class device():
 
 
             fig.tight_layout()
-            fig.savefig('%s/density_variance_%s.pdf'%(plot_dir,self.name))
+            fig.savefig('%s/%s'%(plot_dir,fname))
             plt.close(fig)
 
 
@@ -267,7 +276,6 @@ class device():
         peak_rho_index = np.argmax( self.rhobar_1[sl2]) + mean_density[0]+index
 
         R = peak_rho/mean_rho
-        print(R)
         self.cs = np.sqrt( gamma*self.vel**2*(1/R)*(1-1/R))
         self.mean_rho = mean_rho
         self.peak_rho = peak_rho
@@ -275,6 +283,28 @@ class device():
 
         if fname is not None:
             if 1:
+                fig,ax=plt.subplots(1,1,figsize=(4,4))
+                ax0=ax
+                ax0.plot(self.rhobar_1,c='k')
+                ax0.axvline(mean_density[0], c=[0.5]*4)
+                ax0.axvline(mean_density[1], c=[0.5]*4)
+                ax0.axvline(mean_density[2], c=[0.5]*4)
+
+                ax0.scatter(index+mean_density[0], mean_rho, c='r',marker='*',s=100)
+                ax0.scatter(peak_rho_index, peak_rho, c='r', marker='*',s=100)
+
+                ax0.text(0.1,0.8,  r'$\frac{\rho_{max}}{\rho_{min}}=%0.2e$'%R, transform=ax0.transAxes)
+                ax0.text(0.1,0.75,  r'$c_s=%0.2f km/s$'%self.cs, transform=ax0.transAxes)
+
+                ax1=ax0.twinx()
+                drho = self.rhobar_1[1:]-self.rhobar_1[:-1]
+                ax1.plot(drho)
+
+
+                fig.tight_layout()
+                fig.savefig('%s/%s'%(plot_dir,fname))
+            if 0:
+                #nice one pane plot
                 fig,ax=plt.subplots(1,1,figsize=(4,4))
                 ax0=ax
                 ax0.plot(self.rhobar_1,c='k')

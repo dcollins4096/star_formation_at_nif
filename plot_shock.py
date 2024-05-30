@@ -4,15 +4,20 @@ reload(shot)
 import tools.tabletool as tabletool
 reload(tabletool)
 
-names = ['r60','r120', 'r0', 's90','s120']
-#names=['s90']
+#names = ['r60','r120', 'r0', 's90','s120']
+names=['r60']
 
-if 'devices' not in dir():
+#checking for existence of things helps reduce work
+if 'clobber' not in dir():
+    clobber=False
+
+#if a shot is in "device", it will not get remade.
+if 'devices' not in dir() or clobber:
     devices={}
 
 #lightmodel converts the image into usable density.
 #Details are found in physical_values.py
-lightmodel = {'r0':0,'r60':0,'r120':0,'s120':3,'s90':3}[name]
+lightmodel = {'r0':0,'r60':0,'r120':0,'s120':3,'s90':3}
 #number of pixels for smoothing
 smooth=3
 
@@ -34,7 +39,7 @@ post_shock_region = {'r0':[550,750], 'r60':[475,675], 'r120':[475,675]}
 
 for name in names:
     if name not in devices:
-        tmp=shot.device(name, lines=y_cut[name], lightmodel=lightmodel,smooth=smooth)
+        tmp=shot.device(name, lines=y_cut[name], lightmodel=lightmodel[name],smooth=smooth)
         tmp.image_density1(fname = 'image_shot_%s'%name)
         
         if name in ['s90','s120']:
@@ -47,17 +52,20 @@ for name in names:
             shift_120 = devices['r120'].shift_x
             x_off = 0.5*(shift_60+shift_120)
         #Supply a file name to trigger a plot.
-        tmp.bumper(bump_range[name],fix_shift_x=x_off)#  ,fname='bumper_%s.pdf'%name)
-        tmp.get_velocity( vel_cut[name]          )#  ,fname = 'velocity_%s.pdf'%name)
-        tmp.get_csound(mean_density=shock_points[name]   )#  , fname='csound_%s.pdf'%name)
-        tmp.get_sigma_rho(post_shock_region[name]        )#  , fname = 'sigma_rho_%s.pdf'%name)
-        tmp.get_atwood()
-        tmp.get_sigma_v( )
-        print("Atwood %0.2f sigma_v %0.2f Ms %0.2f"%(tmp.atwood_number, tmp.sigma_v, tmp.sigma_v/tmp.cs))
-        print("mean rho %0.2f sigma_b %0.2f"%(tmp.mean_rho, tmp.sigma_B))
+        tmp.bumper(bump_range[name],fix_shift_x=x_off         ,fname='bumper_%s.pdf'%name)
+        tmp.get_velocity2( vel_cut[name]                      ,fname = 'velocity2_%s.pdf'%name)
+        continue
+        tmp.get_velocity( vel_cut[name]                       ,fname = 'velocity_%s.pdf'%name)
+        tmp.get_csound(mean_density=shock_points[name]        , fname='csound_%s.pdf'%name)
+        tmp.get_sigma_rho(post_shock_region[name]             , fname = 'sigma_rho_%s.pdf'%name)
+        #tmp.get_atwood()
+        #tmp.get_sigma_v( )
+        #print("Atwood %0.2f sigma_v %0.2f Ms %0.2f"%(tmp.atwood_number, tmp.sigma_v, tmp.sigma_v/tmp.cs))
+        #print("mean rho %0.2f sigma_b %0.2f"%(tmp.mean_rho, tmp.sigma_B))
         devices[name]=tmp
 
-tabletool.table(devices, fname='table2.tex')
+if 0:
+    tabletool.table(devices, fname='table2.tex')
 if 0:
     fig,ax=plt.subplots(1,1)
     for name in devices:
