@@ -18,7 +18,6 @@ tau_B = rho_B*L_B*alpha_B
 tau_U = rho_U*L_U*alpha_U
 tau_D = rho_D*L_D*alpha_D
 kappa_bar = 1/(alpha_D*L_D*r+alpha_U*L_U)
-t2 = np.exp(alpha_B*L_B*rho_B)
 
 dx_pixel=2.5e-6*unyt.m #micron
 t2 = 40e-9*unyt.s #ns

@@ -176,7 +176,51 @@ class device():
         ya = self.rhobar_1[ok]
         xb = self.x_2[ok]
         yb = self.rhobar_2[ok]
-        print(self.x_2)
+        dx = xa[1:]-xa[:-1]
+
+        if np.abs((xb-xa)/(xb+xa)).mean() > 1e-12:
+            print("Error: shots not lined up.  Need to write some interpolation code.")
+            pdb.set_trace()
+
+        if np.abs( dx/dx[0]-1).mean() > 1e-12:
+            print("Error: non-uniform spacing, need to fix the integral.")
+            pdb.set_trace()
+
+
+        rho_half = 0.5*(yb+ya)
+        drho_dt = (yb-ya)/phys.delta_t
+        #hope the preshock is stationary
+        v0 = 0*unyt.m/unyt.s
+
+        self.v2 = (1/rho_half)*np.cumsum(-drho_dt*dx[0]) + v0
+        self.v2 *= -1 #make it positive.
+
+        if fname is not None:
+            #horz.try2(yb,ya,method=2,fname=fname)
+            fig,axes=plt.subplots(1,3, figsize=(12,4))
+            ax0=axes[0];ax1=axes[1];ax2=axes[2]
+            ax0.plot(self.rhobar_1, c='r')
+            ax0.plot(self.rhobar_2, c='b')
+            ax0.axvline(rng[0],c=[0.5]*4)
+            ax0.axvline(rng[1],c=[0.5]*4)
+            ax1.plot(xa,ya,c='b')
+            ax1.plot(xb,yb,c='r')
+            ax1.set(ylabel='rho')
+            ax1t = ax1.twinx()
+            ax1t.plot(xa,self.v2.in_units('km/s'),label='v2',c='g')
+
+            ax1t.plot(self.vel_pos, self.vel_dist,label='v1',c='purple')
+            ax1t.legend(loc=1)
+            ax1t.set(ylabel='v[km/s]')
+
+            epb.equal_prob(self.v2.in_units('km/s').v, 16, ax=ax2)
+
+            outname='%s/%s'%(plot_dir,fname)
+            fig.tight_layout()
+            fig.savefig(outname)
+            print(outname)
+
+
 
 
     def get_velocity(self,rng, fname=None, nbins=16):
@@ -192,7 +236,9 @@ class device():
         #vel1 = phys.pixel_to_velocity(dx1)
         I2 = horz.ho2(ya=yb,yb=ya) #apologies for this looking backwards)
         dx2 = I2[:,1]-I2[:,0]
+        xbar = 0.5*(I2[:,1]+I2[:,0])
         self.vel_dist = phys.pixel_to_velocity(dx2)
+        self.vel_pos = xbar*(xa[1]-xa[0])+xa[0] #save for plotting
         hist, cen, wid = epb.equal_prob( self.vel_dist.v, nbins)
         max_ind= np.argmax(hist)
         self.vel = cen[ max_ind]

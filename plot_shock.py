@@ -40,7 +40,7 @@ post_shock_region = {'r0':[550,750], 'r60':[475,675], 'r120':[475,675]}
 for name in names:
     if name not in devices:
         tmp=shot.device(name, lines=y_cut[name], lightmodel=lightmodel[name],smooth=smooth)
-        tmp.image_density1(fname = 'image_shot_%s'%name)
+        #tmp.image_density1(fname = 'image_shot_%s'%name)
         
         if name in ['s90','s120']:
             print("Analysis on %s incomplete, need fine adjust (bumper)"%name)
@@ -52,10 +52,10 @@ for name in names:
             shift_120 = devices['r120'].shift_x
             x_off = 0.5*(shift_60+shift_120)
         #Supply a file name to trigger a plot.
-        tmp.bumper(bump_range[name],fix_shift_x=x_off         ,fname='bumper_%s.pdf'%name)
+        tmp.bumper(bump_range[name],fix_shift_x=x_off    )#     ,fname='bumper_%s.pdf'%name)
+        tmp.get_velocity( vel_cut[name]                  )#     ,fname = 'velocity_%s.pdf'%name)
         tmp.get_velocity2( vel_cut[name]                      ,fname = 'velocity2_%s.pdf'%name)
         continue
-        tmp.get_velocity( vel_cut[name]                       ,fname = 'velocity_%s.pdf'%name)
         tmp.get_csound(mean_density=shock_points[name]        , fname='csound_%s.pdf'%name)
         tmp.get_sigma_rho(post_shock_region[name]             , fname = 'sigma_rho_%s.pdf'%name)
         #tmp.get_atwood()
