@@ -1,0 +1,118 @@
+# Linear Advection.
+#TopGridRank            = 3
+#TopGridDimensions      = 100 5 5
+TopGridRank            = 1
+TopGridDimensions      = 100 
+
+ProblemType            = 500
+
+#0 =ppmde, 1=ppmLR, 2 = Zeus, 3 = MHD Harten 4 = MHD_None
+
+
+#      0 = undefined, 1 = direct averaging, 2 = direct averaging without energy correction,
+#      3 = dt only (Use 2.  The others arent usefull.)
+CourantSafetyNumber    = 0.4
+MHD_CT_Method = 1  //0 = none, 1 = Balsara, 2 = Poisson, 3=RJ (use 1)
+
+# Problem Details
+
+
+CycleLastDataDump = -10
+CycleSkipDataDump = 10
+
+
+
+#this breaks, man!
+#DomainRightEdge        = 40 40 40
+
+RightFaceBoundaryCondition = 3
+LeftFaceBoundaryCondition =  3
+
+#    various init styles:
+#       0 = sphere: 1,2,3=rectangular slice along x, y,z
+#       40,41,42=cylander along x,y,z: 
+#       5,6,7,8 = Index Tests. 5: 10*i + 100*j + 1000*k, 6: i, 7:j, 8k
+HydroMethod       = 6
+NumberOfGhostZones = 5
+
+
+MHDBlastInitStyle = 1
+
+# D1 is INSIDE the object.  
+MHDBlastCenter = 0.76 0.5 0.5 //Center in spatial units.
+MHDBlastRadius = 0.25 //in space units OF THE LONGEST AXIS
+
+
+EquationOfState = 0
+#IsothermalSoundSpeed   = 0.7745966787 //sqrt(0.6) (only used for EOS = 1)
+Gamma                  = 1.6666666667
+
+
+StopCycle = 1000
+StopTime = 3.0
+
+MHDBlastDA = 1.0
+MHDBlastDB = 1.0
+
+MHDBlastVelocityA = 0.0 0 0
+MHDBlastVelocityB = 0.0 0 0
+
+#MHDBlastBA  =  1.0 1.41421 0.5
+#MHDBlastBB  =  1.0 1.41421 0.5
+MHDBlastBA  =  0.0 0.0 0.0
+MHDBlastBB  =  0.0 0.0 0.0
+
+#MHDBlastGasEnergyA = 6
+#MHDBlastGasEnergyB = 6
+MHDBlastPA = 0.6
+MHDBlastPB = 0.6
+
+#For characteristic advection
+#8x = Square Wave.
+#7x = Sine Wave.
+#x:
+#0 left fast
+#1 left Alfven
+#2 left Slow
+#3 contact
+#4 right slow
+#5 right alfven
+#6 right fast
+MHDBlastPerturbMethod = 83
+MHDBlastPerturbAmplitude = -1e-6
+
+#
+# AMR crap
+#
+
+#Refinement options:
+# 1 = slope, 2=baryon mass, 3=shocks, 4=particle mass, 6=jeans length
+# 7= cooling time, 8=mhd dummy
+
+CellFlaggingMethod     = 8
+NumberOfBufferZones    = 0
+MaximumRefinementLevel    = 0
+MHD_InterpolationMethod = 1 //0 = Direct sample, 1=Average
+MinimumSlopeForRefinement        = 0.3;
+
+
+MHD_ProjectE           =  1
+MHD_ProjectB   = 0
+
+StaticHierarchy           = 0    // dynamic hierarchy
+RefineBy                  = 2    // refinement factor
+
+TopGridGravityBoundary = 0       // Periodic BC
+SelfGravity            = 0       // Gravity on.
+
+#TracerParticleOn = 1
+#TracerParticleCreationLeftEdge = 0 0 0
+#TracerParticleCreationRightEdge= 1 0.2 0.2
+#TracerParticleCreationSpacing = 0.01
+
+
+# The Defaults!
+#  MinimumSlopeForRefinement        = 0.3;          // 30% change in value
+#  MinimumPressureJumpForRefinement = 0.33;         // As in PPM method paper
+#  MinimumEnergyRatioForRefinement  = 0.1;          // conservative!
+# tiny_number            = 1.0e-6  // fixes velocity slope problem
