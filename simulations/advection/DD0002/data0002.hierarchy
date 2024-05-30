@@ -1,0 +1,24 @@
+
+Grid = 1
+Task              = 0
+GridRank          = 1
+GridDimension     = 110 
+GridStartIndex    = 5 
+GridEndIndex      = 104 
+GridLeftEdge      = 0 
+GridRightEdge     = 1 
+Time              = 0.078431269511185
+SubgridsAreStatic = 0
+NumberOfBaryonFields = 8
+FieldType = 0 1 4 5 6 49 50 51 
+BaryonFileName = ./DD0002/data0002.cpu0000
+CourantSafetyNumber    = 0.400000
+PPMFlatteningParameter = 0
+PPMDiffusionParameter  = 0
+PPMSteepeningParameter = 0
+NumberOfParticles   = 0
+NumberOfActiveParticles = 0
+PresentParticleTypes = 
+ParticleTypeCounts = 
+Pointer: Grid[1]->NextGridThisLevel = 0
+Pointer: Grid[1]->NextGridNextLevel = 0
