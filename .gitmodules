@@ -1,0 +1,3 @@
+[submodule "dtools"]
+	path = dtools
+	url = git@github.com:dcollins4096/dtools.git
