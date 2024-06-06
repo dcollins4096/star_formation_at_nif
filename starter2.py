@@ -10,6 +10,13 @@
 #tifffile
 
 #Load packages not specific to this project.
+import os
+import sys
+if not os.path.exists('dtools/starter1.py'):
+    print("Need to get the submodule")
+    print("git submodule init")
+    print("git submodule update")
+    sys.exit(-1)
 from dtools.starter1 import *
 import dtools.davetools as dt
 from scipy.ndimage import gaussian_filter
