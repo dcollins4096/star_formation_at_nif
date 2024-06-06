@@ -26,6 +26,6 @@ plot_dir = os.environ['HOME']+"/plots"
 #plot_dir = "./plots_to_sort"
 
 #project specific imports
-import tools.equal_probability_binner as epb
-import tools.power_spectrum as ps
+import dtools.math.equal_probability_binner as epb
+import dtools.math.power_spectrum as ps
 import tools.horizontal_distance as horz
