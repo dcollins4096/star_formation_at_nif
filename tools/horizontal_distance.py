@@ -53,7 +53,7 @@ def ho2(xa=None,xb=None,ya=None,yb=None):
     y1 = nar(copy.copy(ya))
     y2 = nar(copy.copy(y1)) #horizontal lines
     y3 = nar(copy.copy(yb))
-    y4 = copy.copy(y3) #will be trimmed to shift later
+    y4 = copy.copy(yb) #will be trimmed to shift later
     if xa is None:
         xa = np.arange(y1.size)
     if xb is None:
@@ -83,6 +83,8 @@ def ho2(xa=None,xb=None,ya=None,yb=None):
     y3.shape = y3.size,1
     y4.shape = y4.size,1
 
+    y3 -= 1e-12
+    y4 += 1e-8
     denom = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
     t = np.zeros_like(x1-x3,dtype='float')-1
     u = np.zeros_like(x1-x3,dtype='float')-1
@@ -90,6 +92,25 @@ def ho2(xa=None,xb=None,ya=None,yb=None):
     t[ok] =  ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4))[ok] / denom[ok]
     u[ok] = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3))[ok] / denom[ok]
     ok2 = (0<=t)*(t<=1.0)*(0<=u)*(u<=1.0)
+    if 0:
+        print((y1-y3).shape)
+        #print(y3-y4)
+        #print( (x4-x3))
+        print( y1-y3)
+        fig,axes=plt.subplots(1,2, figsize=(8,4))
+        ax0=axes[0];ax1=axes[1]
+        #moo=(y1-y3)[:10,:10].T
+        moo = t[:10,:10]
+        #moo = denom[:10,:10]
+        #pdb.set_trace()
+        momax = np.abs(moo).max()
+        norm = mpl.colors.Normalize(vmin=-momax, vmax=momax)
+        norm = None
+        plot=ax0.imshow(moo,cmap='seismic',norm=norm)
+        fig.colorbar(plot,ax=ax0)
+        plot=ax1.imshow(u[:10,:10].T,cmap='seismic')#,norm=norm)
+        fig.colorbar(plot,ax=ax1)
+        plt.savefig('%s/t'%plot_dir)
 
     #for each x1, we want the lowest x3.
     #AX1 and AX3 are all the segments that intersect.
@@ -117,8 +138,9 @@ def ho(a,b):
     for x1, y1 in enumerate(a):
         x2 = len(b)
         y2 = y1
-        for x3, (y3, y4) in enumerate(pairwise(b)):
+        for x3, (y3i, y4) in enumerate(pairwise(b)):
             x4 = x3 + 1
+            y3 =y3i#-1e-3
 
             try:
                 t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
@@ -130,7 +152,7 @@ def ho(a,b):
                 px, py = x1 + t * (x2 - x1), y1 + t * (y2 - y1)
                 intersections.append((x1, px, py))
                 break
-    return intersections
+    return nar(intersections)
 
 def try2(a,b,method=1,fname='hor_test_2'):
     if method==1:
