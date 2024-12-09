@@ -1,6 +1,7 @@
 from starter2 import *
 import regions.subregions as subregions
 reload(subregions)
+import unyt
 unit_kappa = unyt.cm**2/unyt.g
 unit_density = unyt.g/unyt.cm**3
 alpha_B = 0.777*unit_kappa #cm^2/g
