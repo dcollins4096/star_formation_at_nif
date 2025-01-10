@@ -22,6 +22,13 @@ if 1:
     reverse=True
 
 if 0:
+    template = "simulations/snow2/DD%04d/data%04d"
+    name = 'snow2'
+    frame0=259
+    frame1=300
+    reverse=True
+
+if 0:
     name = 'bw'
     template = "simulations/BW/DD%04d/data%04d"
     frame0=30
@@ -93,7 +100,7 @@ if 1:
     vs = vvv1[shock_sl]
     vg = vvv2[shock_sl]
     c_guess = np.sqrt( vs**2 - 0.5*vs*vg.v*(gamma+1))
-    c_act = cs_0[shock_sl]
+    c_act = cs_1[shock_sl]
     mm = min([c_guess.min(),c_act.v.min()])
     xx = max([c_guess.max(),c_act.v.max()])
     #ax1.scatter(vs,vg)
